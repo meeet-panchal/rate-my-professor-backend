@@ -2,13 +2,16 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const AppointmentsSchema = new Schema([{
-    date: String,
-    time:String,
-    isTimeSlotAvailable:{type:Boolean,default:true},
-    isSlotActive: {type:Boolean,default:false}
+const StudentsSchema = new Schema([{
+    firstName: String,
+    lastName:String,
+    email: String,
+    password: String,
+    isStudent: Boolean,
+    institution: String,
+    department: String
 }]);
 
-const Appointments = mongoose.model("Appointments", AppointmentsSchema);
+const Students = mongoose.model("Students", StudentsSchema);
 
-module.exports = Appointments;
+module.exports = Students;

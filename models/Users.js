@@ -2,16 +2,17 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const StudentsSchema = new Schema([{
+const UsersSchema = new Schema([{
     firstName: String,
     lastName:String,
     email: String,
     password: String,
     isStudent: Boolean,
     institution: String,
-    department: String
+    department: String,
+    refreshToken: {type:String,default:""}
 }]);
 
-const Students = mongoose.model("Students", StudentsSchema);
+const Users = mongoose.model("users", UsersSchema);
 
-module.exports = Students;
+module.exports = Users;

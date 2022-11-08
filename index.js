@@ -18,6 +18,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const registerUser = require('./controllers/registerUser')
 app.post('/register',registerUser)
 
+const loginUser = require('./controllers/loginUser')
+app.post('/login',loginUser)
+
 
 app.listen(PORT, () => {
 	console.log(`Application is running on PORT: ${PORT}`);

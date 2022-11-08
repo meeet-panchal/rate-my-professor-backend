@@ -1,8 +1,8 @@
-const Students = require('../models/Students')
+const Users = require('../models/Users')
 const bcrypt = require("bcrypt");
 
 
-module.exports = (req,res)=>{
+module.exports = async (req,res)=>{
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/g
     const validPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g
 
@@ -29,6 +29,13 @@ module.exports = (req,res)=>{
     }
 
     const {isAllValueValid, isEmailValid, isFirstNameValid, isLastNameValid, isPasswordValid } = checkForValidValues()
+    const checkExistingUser =  isEmailValid ? await Users.findOne({email}) : null
+
+    if(checkExistingUser){
+        res.status(409).json({
+            "message" : `${email} is already registered with us. Please try different email.`
+        })
+    }
 
     if(!checkMissingAndEmptyValues()){
         res.status(400).json({
@@ -52,10 +59,10 @@ module.exports = (req,res)=>{
     }else{
         const encryptedPassword = bcrypt.hashSync(password, 10);
         if(isStudent){
-            const studentDetails = {firstName,lastName,password:encryptedPassword,institution,department,email,isStudent}
+            const userDetails = {firstName,lastName,password:encryptedPassword,institution,department,email,isStudent,refreshToken:''}
 
-            Students.create(studentDetails).then(student=>{
-                const {_id,firstName,lastName,email,department,institution,isStudent } = student
+            Users.create(userDetails).then(user=>{
+                const {_id,firstName,lastName,email,department,institution,isStudent } = user
                 res.status(201).json({
                 "message": "User has been successfully registered",
                 "data": {_id,firstName,lastName,email,department,institution,isStudent}

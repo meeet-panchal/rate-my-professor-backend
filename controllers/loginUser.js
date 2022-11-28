@@ -26,13 +26,13 @@ module.exports = async (req, res) => {
 
     if(isPasswordValid){
         const accessToken = jwt.sign(
-            {'userData' : {email,isStudent}},
+            {'userData' : {email,isStudent,_id}},
             process.env.ACCESS_TOKEN,
             { expiresIn: '2h' }
         )
 
         const refreshToken = jwt.sign(
-            {'userData' : {email,isStudent}},
+            {'userData' : {email,isStudent,_id}},
             process.env.REFRESH_TOKEN,
             { expiresIn: '2d' }
         )
@@ -41,7 +41,8 @@ module.exports = async (req, res) => {
         Users.findOneAndUpdate({email},{refreshToken}).then(user => {
 
             //? setting cookie in the client side
-            res.cookie('REFRESH', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 48 * 60 * 60 * 1000 });
+            // res.cookie('REFRESH_TOKEN', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 48 * 60 * 60 * 1000 });
+            res.cookie('REFRESH_TOKEN', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 48 * 60 * 60 * 1000 });
     
     
             res.status(200).json({

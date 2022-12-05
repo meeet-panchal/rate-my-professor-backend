@@ -6,7 +6,7 @@ module.exports = async (req,res)=>{
     const validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/g
     const validPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g
 
-    const {firstName, lastName, institution, email, department, isStudent, password} = req.body
+    const {firstName, lastName, institution, email, department, isStudent, password,year} = req.body
 
 
     const checkMissingAndEmptyValues = ()=>{
@@ -35,12 +35,14 @@ module.exports = async (req,res)=>{
         res.status(409).json({
             "message" : `${email} is already registered with us. Please try different email.`
         })
+        return
     }
 
     if(!checkMissingAndEmptyValues()){
         res.status(400).json({
             "message": "Please provide all the required field"
         })
+        return
     }else if (!isAllValueValid){
         let error = {}
         if(!isEmailValid){
@@ -59,7 +61,7 @@ module.exports = async (req,res)=>{
     }else{
         const encryptedPassword = bcrypt.hashSync(password, 10);
         if(isStudent){
-            const userDetails = {firstName,lastName,password:encryptedPassword,institution,department,email,isStudent,refreshToken:''}
+            const userDetails = {firstName,lastName,password:encryptedPassword,institution,department,email,isStudent,refreshToken:'',year,recomendationRate:0,overallRating:0,rateTeaching:0}
 
             Users.create(userDetails).then(user=>{
                 const {_id,firstName,lastName,email,department,institution,isStudent } = user

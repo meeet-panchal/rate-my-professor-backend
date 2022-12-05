@@ -8,9 +8,13 @@ const UsersSchema = new Schema([{
     email: String,
     password: String,
     isStudent: Boolean,
-    institution: String,
-    department: String,
-    refreshToken: {type:String,default:""}
+    institution: { type: Schema.Types.ObjectId, ref: 'universities' },
+    department: { type: Schema.Types.ObjectId, ref: 'departments' },
+    year:Number,
+    refreshToken: {type:String,default:""},
+    recomendationRate:Number,
+    overallRating:Number,
+    rateTeaching: Number,
 }]);
 
 const Users = mongoose.model("users", UsersSchema);

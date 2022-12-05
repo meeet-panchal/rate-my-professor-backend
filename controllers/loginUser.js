@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
 
             //? setting cookie in the client side
             // res.cookie('REFRESH_TOKEN', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 48 * 60 * 60 * 1000 });
-            res.cookie('REFRESH_TOKEN', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 48 * 60 * 60 * 1000 });
+            res.cookie('REFRESH_TOKEN', refreshToken, { httpOnly: false, sameSite: 'None',secure: true, maxAge: 48 * 60 * 60 * 1000 });
     
     
             res.status(200).json({

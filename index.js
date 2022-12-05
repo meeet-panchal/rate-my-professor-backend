@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookies = require("cookie-parser");
+const corsMiddleware = require('./middlewares/cors.middleware')
 
 const PORT = process.env.PORT;
 
@@ -16,6 +17,7 @@ const app = new express();
 app.use(cookies());
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(corsMiddleware)
 
 const registerUser = require('./controllers/registerUser')
 app.post('/register',registerUser)
@@ -29,6 +31,20 @@ app.post('/refreshToken',refreshToken)
 const logoutUser = require("./controllers/logoutUser")
 app.post('/logout',logoutUser)
 
+const getAllDepartments = require('./controllers/getAllDepartments')
+app.get('/departments',getAllDepartments)
+
+const getAllInstitutions = require('./controllers/getAllInstitutions')
+app.get('/institutions',getAllInstitutions)
+
+const getUserInfo = require('./controllers/getUserInfo')
+app.get("/user",getUserInfo)
+
+const saveRatings = require('./controllers/saveRatings')
+app.post('/saveRatings',saveRatings)
+
+const getAllRatings = require('./controllers/getAllRatings')
+app.get('/ratings',getAllRatings)
 
 app.listen(PORT, () => {
 	console.log(`Application is running on PORT: ${PORT}`);

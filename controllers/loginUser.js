@@ -6,6 +6,8 @@ const Users = require('../models/Users')
 module.exports = async (req, res) => {
     const { email, password } = req.body
 
+    console.log("BODY : ",req.headers);
+
     //? empty fields
     if (!email || !password) {
         res.status(400).json({

@@ -24,11 +24,9 @@ module.exports = async (req, res) => {
 
             return
         }
-        const { userData: { _id } } = decoded
+        const {ratingId} = req.params
 
-        const ratings = { ...req.body, ratingGivenBy: _id, ratingGivenOn: new Date() }
-
-        await Ratings.create(ratings)
+        await Ratings.findByIdAndDelete(ratingId)
 
             .then(async (rating) => {
                 
@@ -58,26 +56,17 @@ module.exports = async (req, res) => {
                             rateTeaching: avgTeachingRating
                         })
                         .then(_ => res.status(201).json({
-                            "message": "Ratings has been submitted",                            
+                            "message": "Rating has been deleted!",  
+                            "data" : {ratingGivenFor}                          
                         }))
                         .catch(e => console.error("Updating User : ", e))
                 }).catch(e => console.error("Error : ", e))
                 
             })
-/*             .catch(error => res.status(406).json({
+            .catch(error => res.status(406).json({
                 "message": "Rating can't be submitted at the moment",
                 "error": JSON.stringify(error)
-            })) */
+            }))
 
-        // res.json(ratings)
     })
 }
-
-/* (error,decoded)=>{
-
-    if(email !== decoded?.userData?.email || error) {
-        res.status(403).json({
-            "message": "User is not authorized"
-        })
-    }
-} */

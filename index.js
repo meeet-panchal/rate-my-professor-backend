@@ -60,6 +60,12 @@ app.post('/saveRatings', saveRatings)
 const getAllRatings = require('./controllers/getAllRatings')
 app.get('/ratings', getAllRatings)
 
+const editRating = require('./controllers/editRating')
+app.put('/editRating/:ratingId',editRating)
+
+const deleteRating = require('./controllers/deleteRating')
+app.delete('/deleteRating/:ratingId',deleteRating)
+
 app.listen(PORT, () => {
 	console.log(`Application is running on PORT: ${PORT}`);
 });

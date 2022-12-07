@@ -21,6 +21,8 @@ module.exports = async (req, res) => {
             res.json({data,ratingDistribution})
             return
         })
+    } else if (req.query.ratingId){
+        Ratings.findById(req.query.ratingId).then(data => res.json(data))
     } else {
         Ratings.find().then(data => res.json(data))
 

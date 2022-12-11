@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const cookies = require("cookie-parser");
 const corsMiddleware = require('./middlewares/cors.middleware')
 var cors = require('cors')
+const Institution = require('./models/Institutions')
+
 
 
 
@@ -15,6 +17,7 @@ mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true }, (error) =>
 	console.log("Database Connected Successfully!");
 	error ? console.error("Error: ", error) : undefined;
 });
+
 
 const app = new express();
 // app.use(cors())
@@ -63,8 +66,17 @@ app.get('/ratings', getAllRatings)
 const editRating = require('./controllers/editRating')
 app.put('/editRating/:ratingId',editRating)
 
-const deleteRating = require('./controllers/deleteRating')
+const deleteRating = require('./controllers/deleteRating');
 app.delete('/deleteRating/:ratingId',deleteRating)
+
+const getUniversityDetails = require('./controllers/getUniversities')
+app.get('/university',getUniversityDetails)
+
+const saveUniversityRating = require('./controllers/saveUiversityRarting')
+app.post('/saveUniversityRating',saveUniversityRating)
+
+const getUniversityRating = require('./controllers/getUniversityRatings')
+app.get('/universityRating',getUniversityRating)
 
 app.listen(PORT, () => {
 	console.log(`Application is running on PORT: ${PORT}`);

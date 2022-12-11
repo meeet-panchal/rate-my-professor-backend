@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require("mongoose");
-const Ratings = require('../models/Ratings');
-const Users = require('../models/Users');
+const UniversityRating = require('../models/UniversityRating');
+const Institutions = require('../models/Institutions');
 
 module.exports = async (req, res) => {
 
@@ -28,34 +28,49 @@ module.exports = async (req, res) => {
 
         const ratings = { ...req.body, ratingGivenBy: _id, ratingGivenOn: new Date() }
 
-        await Ratings.create(ratings)
+        await UniversityRating.create(ratings)
 
             .then(async (rating) => {
                 
                 const { ratingGivenFor } = rating
 
-                await Ratings.aggregate([
+                await UniversityRating.aggregate([
                     { $match: { ratingGivenFor: mongoose.Types.ObjectId(ratingGivenFor) } },
                     {
                         $group:
                         {
                             _id: '$ratingGivenFor',
                             avgOverallRating: { $avg: "$overallRating" },
-                            avgTeachingRating: { $avg: "$rateTeaching" },
-                            totalRecommendedRatings: { $sum: { $cmp: ["$isRecommended", false] } },
+                            avgReputation: { $avg: "$reputation" },
+                            avgOpportunities: { $avg: "$opportunities" },
+                            avgFacilities: { $avg: "$facilities" },
+                            avgInternet: { $avg: "$internet" },
+                            avgFood: { $avg: "$food" },
+                            avgClub: { $avg: "$club" },
+                            avgSocial: { $avg: "$social" },
+                            avgHappiness: { $avg: "$happiness" },
+                            avgSafety: { $avg: "$safety" },
                             totalRatings: { $sum: 1 },
                         },
 
                     }
                 ]).then(async (newMetrices) => {
 
-                    const { avgOverallRating, avgTeachingRating, totalRecommendedRatings, totalRatings } = newMetrices[0]
+                    const { avgOverallRating, avgReputation, avgOpportunities,avgFacilities, avgInternet, avgFood, avgClub,avgSocial,
+                        avgHappiness,avgSafety } = newMetrices[0]
 
-                    Users.findByIdAndUpdate(ratingGivenFor,
+                    Institutions.findByIdAndUpdate(ratingGivenFor,
                         {
-                            recomendationRate: parseInt((totalRecommendedRatings/totalRatings) * 100),
                             overallRating: avgOverallRating,
-                            rateTeaching: avgTeachingRating
+                            reputation:avgReputation, 
+                            opportunities:avgOpportunities,
+                            facilities:avgFacilities, 
+                            internet:avgInternet, 
+                            food:avgFood, 
+                            club:avgClub,
+                            social:avgSocial,
+                            happiness:avgHappiness,
+                            safety:avgSafety,
                         })
                         .then(_ => res.status(201).json({
                             "message": "Ratings has been submitted",                            

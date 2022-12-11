@@ -3,15 +3,15 @@ const Ratings = require('../models/Ratings')
 const Users = require('../models/Users')
 
 module.exports = async(req,res) =>{
-    if(req.query.department){
+/*     if(req.query.department){
         Users.find({isStudent:req.query.isStudent,department:req.query.department})
         .populate({path:'institution',select:'universityname'}).populate({path:'department',select:'name'})
         .then(data=>res.json(data))
 
-    }
+    } */
 
-    if(!req?.query?.id){
-        Users.find({isStudent:req.query.isStudent})
+    if(req?.query?.id){
+        Users.find({isStudent:req.query.isStudent,_id:req.query.id})
         .populate({path:'institution'}).populate({path:'department'})
         .then(data=>res.json(data))
     }else{
